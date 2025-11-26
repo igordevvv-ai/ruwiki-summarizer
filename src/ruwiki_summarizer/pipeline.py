@@ -75,7 +75,7 @@ def run_pipeline(
             max_sent=max_s,
         )
 
-        # Чуть увеличенный лимит токенов на случай списков и сложных формулировок.
+        # Небольшой запас по токенам, чтобы текст не обрывался.
         max_tokens = max_s * 100
 
         section_summary = client.generate(
