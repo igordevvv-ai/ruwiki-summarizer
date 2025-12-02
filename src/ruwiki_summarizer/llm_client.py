@@ -23,7 +23,7 @@ class LLMClient:
         elif backend == "openrouter":
             self.api_url = "https://openrouter.ai/api/v1/chat/completions"
             # Ключ сейчас захардкодил.
-            #self.api_key = "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"
+            self.api_key = "ТУТ ДОЛЖЕН БЫТЬ КЛЮЧ"
 
         else:
             raise ValueError(f"Неподдерживаемый backend: {backend}")
