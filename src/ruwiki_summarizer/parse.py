@@ -85,7 +85,7 @@ def extract_intro_and_sections(wikitext: str) -> Tuple[str, "OrderedDict[str, st
 
     Возвращает:
       intro_text — очищенный текст вступления (до первого заголовка),
-      sections   — OrderedDict{заголовок_раздела: очищенный_текст_раздела}.
+      sections_ — OrderedDict{заголовок_раздела: очищенный_текст_раздела}.
 
     Служебные разделы (примечания, ссылки и т.п.) отбрасываются.
     """

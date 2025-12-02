@@ -12,7 +12,7 @@ from ruwiki_summarizer.pipeline import run_pipeline
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Генерация упрощённого конспекта статьи RuWiki для школьников 7-9 класса."
+        description="Генерация упрощённого конспекта статьи RuWiki для школьников."
     )
     parser.add_argument(
         "--title",
@@ -24,8 +24,8 @@ def parse_args() -> argparse.Namespace:
         "--backend",
         type=str,
         default="local",
-        choices=["local", "api"],
-        help="Тип LLM-бэкенда: сейчас поддерживается только local.",
+        choices=["local", "openrouter"],
+        help="Тип LLM-бэкенда: локальная модель или OpenRouter API.",
     )
     parser.add_argument(
         "--output",
@@ -33,7 +33,15 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Путь к файлу, куда сохранить результат (если не задан, выводим в консоль).",
     )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default="per_section",
+        choices=["per_section", "ege_fewshot"],
+        help="Режим работы пайплайна: по разделам ('per_section') или целиком в формате ЕГЭ/ОГЭ ('ege_fewshot').",
+    )
     return parser.parse_args()
+
 
 
 def main() -> None:
@@ -41,6 +49,7 @@ def main() -> None:
     summary = run_pipeline(
         title=args.title,
         backend=args.backend,
+        mode=args.mode,
     )
 
     if summary is None:
