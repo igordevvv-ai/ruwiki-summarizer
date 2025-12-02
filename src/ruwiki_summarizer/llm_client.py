@@ -28,7 +28,7 @@ class LLMClient:
         else:
             raise ValueError(f"Неподдерживаемый backend: {backend}")
 
-    # ================== ЕДИНЫЙ СТАРЫЙ ИНТЕРФЕЙС ==================
+    # ЕДИНЫЙ СТАРЫЙ ИНТЕРФЕЙС
 
     def generate(
         self,
@@ -63,7 +63,7 @@ class LLMClient:
         else:
             raise ValueError(f"Неподдерживаемый backend: {self.backend}")
 
-    # ================== ЛОКАЛЬНАЯ МОДЕЛЬ (OLLAMA) ==================
+    # ЛОКАЛЬНАЯ МОДЕЛЬ (OLLAMA)
 
     def _generate_local(
         self,
@@ -104,7 +104,7 @@ class LLMClient:
         data = resp.json()
         return (data.get("response") or "").strip()
 
-    # ================== OPENROUTER: старый интерфейс ==================
+    # OPENROUTER: старый интерфейс
 
     def _generate_openrouter(
         self,
@@ -130,7 +130,7 @@ class LLMClient:
             top_p=top_p,
         )
 
-    # ================== OPENROUTER: chat (few-shot) ==================
+    # OPENROUTER: chat (few-shot)
 
     def generate_chat(
             self,
@@ -150,7 +150,7 @@ class LLMClient:
         if self.backend != "openrouter":
             raise ValueError("generate_chat поддерживается только при backend='openrouter'.")
 
-        import time  # важно!
+        import time
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -168,7 +168,7 @@ class LLMClient:
             "stream": False,
         }
 
-        # ---- RETRY LOOP ----
+        # RETRY LOOP 
         for attempt in range(max_retries):
             resp = requests.post(self.api_url, headers=headers, json=payload, timeout=180)
 
@@ -209,8 +209,6 @@ class LLMClient:
                 time.sleep(wait)
                 continue
 
-            # ----- SUCCESS -----
             return cleaned
 
-        # ---- после всех попыток ----
         raise RuntimeError(f"Модель не ответила после {max_retries} попыток.")
