@@ -1,7 +1,6 @@
 import json
 from typing import Optional
 from pathlib import Path
-
 from .fetch import fetch_wikitext
 from .parse import extract_intro_and_sections, count_words, basic_cleanup
 from .prompts import build_intro_prompts, build_section_prompts, decide_sentence_bounds
@@ -16,7 +15,7 @@ def run_pipeline(
 ) -> Optional[str]:
     """
     Новый пайплайн:
-    - mode='per_section': текущая логика по вступлению и разделам.
+    - mode='per_section': старая логика по вступлению и разделам.
     - mode='ege_fewshot': один вызов chat-модели с few-shot примером ЕГЭ/ОГЭ.
     """
     if mode == "per_section":
@@ -57,7 +56,11 @@ def _run_pipeline_per_section(
 
     """
     Оставляю возможность использовать для локального backend-а Ollama + qwen2.5:3b-instruct,
-    Для openrouter — модель qwen/qwen3-4b:free или mistralai/mistral-7b-instruct:free или google/gemma-3-12b-it:free или mistralai/mistral-small-3.1-24b-instruct:free.
+    Для openrouter пробовал модели:
+    qwen/qwen3-4b:free
+    или mistralai/mistral-7b-instruct:free
+    или google/gemma-3-12b-it:free
+    или mistralai/mistral-small-3.1-24b-instruct:free.
     """
 
     model_name = (
@@ -153,7 +156,7 @@ def _run_pipeline_ege_fewshot(
     with open("logs/last_messages.json", "w", encoding="utf-8") as f:
         json.dump(messages, f, ensure_ascii=False, indent=2)
 
-    # Для OpenRouter используем мощную модель
+    # Для OpenRouter используем модель мощнее
     client = LLMClient(
         backend="openrouter",
         model_name="mistralai/mistral-small-3.1-24b-instruct:free",

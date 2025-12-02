@@ -87,11 +87,11 @@ def build_ege_fewshot_messages(
     title: str,
 ) -> List[Dict[str, str]]:
     """
-    Few-shot для моделей, которые не поддерживают отдельное system-сообщение (например, gemma-3-12b-it).
-    Все инструкции засунуты в первый user-скрипт.
+    Оптимизировал Few-shot для моделей, которые не поддерживают отдельное system-сообщение (например, gemma-3-12b-it).
+    Все инструкции добавил в первый user-скрипт.
     """
 
-    # 1) Инструкции + ПРИМЕР 1 (source) — одним user-сообщением
+    # 1) Инструкции + пример 1 (запрос)
     first_user = (
         "Ты — редактор Рувики и автор учебных статей в формате ЕГЭ/ОГЭ.\n"
         "На вход ты получаешь статьи Рувики в обычном энциклопедическом стиле.\n"
@@ -127,7 +127,7 @@ def build_ege_fewshot_messages(
 
     assistant_example_1 = EXAMPLE_TARGET_1_EGE.strip()
 
-    # 2) ПРИМЕР 2 (source) — отдельный user
+    # 2) Пример 2 (запрос)
     user_example_2 = (
         "ПРИМЕР 2.\n\n"
         "Ниже дан фрагмент другой статьи Рувики (ИСХОДНЫЙ ТЕКСТ):\n"
@@ -139,7 +139,7 @@ def build_ege_fewshot_messages(
 
     assistant_example_2 = EXAMPLE_TARGET_2_EGE.strip()
 
-    # 3) Новый запрос — статья, которую надо оформить
+    # 3) Новый запрос — реальная статья, которую надо оформить
     user_new = (
         f"Теперь возьми НОВУЮ статью Рувики с названием '{title}' "
         "и оформи её в учебном формате ЕГЭ/ОГЭ по аналогии с двумя примерами выше.\n\n"
@@ -151,13 +151,10 @@ def build_ege_fewshot_messages(
     )
 
     messages: List[Dict[str, str]] = [
-        # Инструкции + пример 1 (запрос)
         {"role": "user", "content": first_user},
         {"role": "assistant", "content": assistant_example_1},
-        # Пример 2
         {"role": "user", "content": user_example_2},
         {"role": "assistant", "content": assistant_example_2},
-        # Новый запрос
         {"role": "user", "content": user_new},
     ]
 
